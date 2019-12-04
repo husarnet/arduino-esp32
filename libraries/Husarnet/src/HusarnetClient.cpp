@@ -111,7 +111,7 @@ int HusarnetClient::connect(IP6Address ip, uint16_t port)
     return 1;
 }
 
-// provided by WebSetup
+// provided by Husarnet
 sockaddr_storage resolve(const std::string& hostname, const std::string& port);
 
 int HusarnetClient::connect(const char *host, uint16_t port)
