@@ -112,11 +112,11 @@ int HusarnetClient::connect(IP6Address ip, uint16_t port)
 }
 
 // provided by Husarnet
-sockaddr_storage resolve(const std::string& hostname, const std::string& port);
+sockaddr_storage husarnetResolve(const std::string& hostname, const std::string& port);
 
 int HusarnetClient::connect(const char *host, uint16_t port)
 {
-    sockaddr_storage ss = resolve(host, "1");
+    sockaddr_storage ss = husarnetResolve(host, "1");
 
     if (ss.ss_family != AF_INET6) {
         return 0;

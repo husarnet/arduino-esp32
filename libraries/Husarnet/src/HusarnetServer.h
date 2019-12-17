@@ -39,7 +39,7 @@ class HusarnetServer : public Server {
     ~HusarnetServer(){ end();}
     HusarnetClient available();
     HusarnetClient accept(){return available();}
-    void begin();
+    void begin(uint16_t port=0);
     void setNoDelay(bool nodelay);
     bool getNoDelay();
     bool hasClient();

@@ -64,7 +64,7 @@ HusarnetClient HusarnetServer::available(){
   return HusarnetClient();
 }
 
-void HusarnetServer::begin(){
+void HusarnetServer::begin(uint16_t port){
   if(_listening)
     return;
   struct sockaddr_in6 server;
@@ -73,7 +73,7 @@ void HusarnetServer::begin(){
     return;
   memset(&server, 0, sizeof(sockaddr_in6));
   server.sin6_family = AF_INET6;
-  server.sin6_port = htons(_port);
+  server.sin6_port = port == 0 ? htons(_port) : htons(port);
   server.sin6_len = sizeof(server);
 
   if(bind(sockfd, (struct sockaddr *)&server, sizeof(server)) < 0)
