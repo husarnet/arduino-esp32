@@ -24,6 +24,16 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
+#define NETWORK_TYPE NETWORK_TYPE_HUSARNET
+
+#if (NETWORK_TYPE == NETWORK_TYPE_HUSARNET)
+#define NETWORK_SERVER_CLASS HusarnetServer
+#define NETWORK_CLIENT_CLASS HusarnetClient
+#elif (NETWORK_TYPE == NETWORK_TYPE_WIFI)
+#define NETWORK_SERVER_CLASS WiFiServer
+#define NETWORK_CLIENT_CLASS WiFiServer
+#endif
+
 #include <functional>
 #include <memory>
 #include <WiFi.h>
@@ -94,7 +104,7 @@ public:
 
   String uri() { return _currentUri; }
   HTTPMethod method() { return _currentMethod; }
-  virtual WiFiClient client() { return _currentClient; }
+  virtual NETWORK_CLIENT_CLASS client() { return _currentClient; }
   HTTPUpload& upload() { return *_currentUpload; }
 
   String pathArg(unsigned int i); // get request path argument by number
@@ -145,13 +155,13 @@ protected:
   void _addRequestHandler(RequestHandler* handler);
   void _handleRequest();
   void _finalizeResponse();
-  bool _parseRequest(WiFiClient& client);
+  bool _parseRequest(NETWORK_CLIENT_CLASS& client);
   void _parseArguments(String data);
   static String _responseCodeToString(int code);
-  bool _parseForm(WiFiClient& client, String boundary, uint32_t len);
+  bool _parseForm(NETWORK_CLIENT_CLASS& client, String boundary, uint32_t len);
   bool _parseFormUploadAborted();
   void _uploadWriteByte(uint8_t b);
-  int _uploadReadByte(WiFiClient& client);
+  int _uploadReadByte(NETWORK_CLIENT_CLASS& client);
   void _prepareHeader(String& response, int code, const char* content_type, size_t contentLength);
   bool _collectHeader(const char* headerName, const char* headerValue);
 
@@ -167,9 +177,9 @@ protected:
   };
 
   boolean     _corsEnabled;
-  WiFiServer  _server;
+  NETWORK_SERVER_CLASS  _server;
 
-  WiFiClient  _currentClient;
+  NETWORK_CLIENT_CLASS  _currentClient;
   HTTPMethod  _currentMethod;
   String      _currentUri;
   uint8_t     _currentVersion;

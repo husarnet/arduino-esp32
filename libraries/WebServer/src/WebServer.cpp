@@ -20,12 +20,24 @@
   Modified 8 May 2015 by Hristo Gochkov (proper post and file upload handling)
 */
 
-
 #include <Arduino.h>
 #include <esp32-hal-log.h>
 #include <libb64/cencode.h>
+
+#define NETWORK_TYPE NETWORK_TYPE_HUSARNET
+
+#if (NETWORK_TYPE == NETWORK_TYPE_HUSARNET)
+#include "HusarnetServer.h"
+#include "HusarnetClient.h"
+#define NETWORK_SERVER_CLASS HusarnetServer
+#define NETWORK_CLIENT_CLASS HusarnetClient
+#elif (NETWORK_TYPE == NETWORK_TYPE_WIFI)
 #include "WiFiServer.h"
-#include "WiFiClient.h"
+#include "WiFiServer.h"
+#define NETWORK_SERVER_CLASS WiFiServer
+#define NETWORK_CLIENT_CLASS WiFiServer
+#endif
+
 #include "WebServer.h"
 #include "FS.h"
 #include "detail/RequestHandlersImpl.h"
@@ -36,7 +48,6 @@ static const char AUTHORIZATION_HEADER[] = "Authorization";
 static const char qop_auth[] = "qop=\"auth\"";
 static const char WWW_Authenticate[] = "WWW-Authenticate";
 static const char Content_Length[] = "Content-Length";
-
 
 WebServer::WebServer(IPAddress addr, int port)
 : _corsEnabled(false)
@@ -278,7 +289,7 @@ void WebServer::serveStatic(const char* uri, FS& fs, const char* path, const cha
 
 void WebServer::handleClient() {
   if (_currentStatus == HC_NONE) {
-    WiFiClient client = _server.available();
+    NETWORK_CLIENT_CLASS client = _server.available();
     if (!client) {
       return;
     }
@@ -331,7 +342,7 @@ void WebServer::handleClient() {
   }
 
   if (!keepCurrentClient) {
-    _currentClient = WiFiClient();
+    _currentClient = NETWORK_CLIENT_CLASS();
     _currentStatus = HC_NONE;
     _currentUpload.reset();
   }

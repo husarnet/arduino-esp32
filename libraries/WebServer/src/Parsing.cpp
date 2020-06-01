@@ -21,8 +21,22 @@
 
 #include <Arduino.h>
 #include <esp32-hal-log.h>
+
+
+#define NETWORK_TYPE NETWORK_TYPE_HUSARNET
+
+#if (NETWORK_TYPE == NETWORK_TYPE_HUSARNET)
+#include "HusarnetServer.h"
+#include "HusarnetClient.h"
+#define NETWORK_SERVER_CLASS HusarnetServer
+#define NETWORK_CLIENT_CLASS HusarnetClient
+#elif (NETWORK_TYPE == NETWORK_TYPE_WIFI)
 #include "WiFiServer.h"
-#include "WiFiClient.h"
+#include "WiFiServer.h"
+#define NETWORK_SERVER_CLASS WiFiServer
+#define NETWORK_CLIENT_CLASS WiFiServer
+#endif
+
 #include "WebServer.h"
 #include "detail/mimetable.h"
 
@@ -33,7 +47,7 @@
 static const char Content_Type[] PROGMEM = "Content-Type";
 static const char filename[] PROGMEM = "filename";
 
-static char* readBytesWithTimeout(WiFiClient& client, size_t maxLength, size_t& dataLength, int timeout_ms)
+static char* readBytesWithTimeout(NETWORK_CLIENT_CLASS& client, size_t maxLength, size_t& dataLength, int timeout_ms)
 {
   char *buf = nullptr;
   dataLength = 0;
@@ -65,7 +79,7 @@ static char* readBytesWithTimeout(WiFiClient& client, size_t maxLength, size_t& 
   return buf;
 }
 
-bool WebServer::_parseRequest(WiFiClient& client) {
+bool WebServer::_parseRequest(NETWORK_CLIENT_CLASS& client) {
   // Read the first line of HTTP request
   String req = client.readStringUntil('\r');
   client.readStringUntil('\n');
@@ -302,7 +316,7 @@ void WebServer::_uploadWriteByte(uint8_t b){
   _currentUpload->buf[_currentUpload->currentSize++] = b;
 }
 
-int WebServer::_uploadReadByte(WiFiClient& client){
+int WebServer::_uploadReadByte(NETWORK_CLIENT_CLASS& client){
   if (!client.connected()) return -1;
   int res = client.read();
   if(res < 0) {
@@ -343,7 +357,7 @@ int WebServer::_uploadReadByte(WiFiClient& client){
   return res;
 }
 
-bool WebServer::_parseForm(WiFiClient& client, String boundary, uint32_t len){
+bool WebServer::_parseForm(NETWORK_CLIENT_CLASS& client, String boundary, uint32_t len){
   (void) len;
   log_v("Parse Form: Boundary: %s Length: %d", boundary.c_str(), len);
   String line;
