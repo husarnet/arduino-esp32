@@ -46,19 +46,6 @@
 
 #include "netif/dhcp_state.h"
 
-// For Husarnet
-
-#define DNS_LOCAL_HOSTLIST 1
-#define DNS_LOCAL_HOSTLIST_IS_DYNAMIC 1
-
-#define LWIP_HAVE_LOOPIF 1
-
-#ifndef __cplusplus
-  extern void* ngsocketRouteHook(const void*);
-#endif
-#define LWIP_HOOK_IP6_ROUTE(a, b)       ngsocketRouteHook(b)
-
-
 /* Enable all Espressif-only options */
 
 /*
