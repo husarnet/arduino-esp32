@@ -6,6 +6,9 @@
 //#include <freertos/task.h>
 
 struct _Husarnet {
+    // Sets up Husarnet to use self-hosted base server
+    void selfHostedSetup(const char* hostname);
+
     // Starts the Husarnet
     void start();
 

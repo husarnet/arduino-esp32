@@ -6,9 +6,15 @@ _Husarnet Husarnet;
 extern "C" {
     void husarnet_start();
     void husarnet_join(const char* joinCode, const char* hostname);
+    void husarnet_retrieve_license(const char* hostname);
 }
 
 static bool alreadyStarted = false;
+
+void _Husarnet::selfHostedSetup(const char* hostname) {
+    assert(!alreadyStarted);
+    husarnet_retrieve_license(hostname);
+}
 
 void _Husarnet::start() {
     assert(!alreadyStarted);
