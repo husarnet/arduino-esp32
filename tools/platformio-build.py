@@ -76,7 +76,7 @@ env.Append(
         "-Wl,--undefined=uxTopUsedPriority",
         "-Wl,--gc-sections",
         "-Wl,-EL",
-        "-T", "esp32.common.ld",
+        "-T", "esp32.project.ld",
         "-T", "esp32.rom.ld",
         "-T", "esp32.peripherals.ld",
         "-T", "esp32.rom.libgcc.ld",
@@ -108,6 +108,7 @@ env.Append(
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "coap"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "console"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "driver"),
+        join(FRAMEWORK_DIR, "tools", "sdk", "include", "efuse"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp-tls"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp32"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_adc_cal"),
@@ -115,7 +116,9 @@ env.Append(
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_http_client"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_http_server"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_https_ota"),
+        join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_https_server"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "esp_ringbuf"),
+        join(FRAMEWORK_DIR, "tools", "sdk", "include", "espcoredump"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "ethernet"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "expat"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "fatfs"),
@@ -134,6 +137,7 @@ env.Append(
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "mqtt"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "newlib"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "nghttp"),
+        join(FRAMEWORK_DIR, "tools", "sdk", "include", "nimble"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "nvs_flash"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "openssl"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "protobuf-c"),
@@ -147,6 +151,7 @@ env.Append(
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "tcp_transport"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "tcpip_adapter"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "ulp"),
+        join(FRAMEWORK_DIR, "tools", "sdk", "include", "unity"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "vfs"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "wear_levelling"),
         join(FRAMEWORK_DIR, "tools", "sdk", "include", "wifi_provisioning"),
@@ -166,7 +171,7 @@ env.Append(
     ],
 
     LIBS=[
-        "-lgcc", "-lwifi_provisioning", "-lwpa_supplicant", "-lesp_adc_cal", "-lrtc", "-lnet80211", "-lwps", "-lhusarnet", "-ltcp_transport", "-lsmartconfig_ack", "-ljsmn", "-lopenssl", "-lfd", "-lesp_ringbuf", "-lesp_event", "-lesp_http_server", "-lxtensa-debug-module", "-ljson", "-lfatfs", "-lmesh", "-ldriver", "-lpp", "-lface_recognition", "-lface_detection", "-lulp", "-lespnow", "-lmbedtls", "-lc", "-lfr", "-lnghttp", "-lvfs", "-lexpat", "-lesp_https_ota", "-lmdns", "-lwpa2", "-lpthread", "-lnewlib", "-lprotocomm", "-llwip", "-lprotobuf-c", "-lmqtt", "-lfb_gfx", "-limage_util", "-llibsodium", "-lsmartconfig", "-lfreertos", "-lheap", "-lcore", "-lesp-tls", "-lethernet", "-lcxx", "-lbtdm_app", "-lspi_flash", "-lesp32-camera", "-lphy", "-lwear_levelling", "-lc_nano", "-lm", "-ltcpip_adapter", "-lwpa", "-lfreemodbus", "-lhal", "-lbt", "-lconsole", "-lbootloader_support", "-ldl_lib", "-lapp_trace", "-lsdmmc", "-llog", "-lsoc", "-lspiffs", "-lasio", "-lnvs_flash", "-lcoexist", "-lcoap", "-lod", "-lesp_http_client", "-lapp_update", "-lesp32", "-lmicro-ecc", "-lstdc++"
+        "-lgcc", "-lfreertos", "-lmesh", "-lod", "-lwear_levelling", "-lfb_gfx", "-lesp_adc_cal", "-lc_nano", "-lesp32", "-ldriver", "-lhal", "-ljsmn", "-lsmartconfig", "-lesp_http_server", "-lprotocomm", "-lface_recognition", "-lespnow", "-ltcpip_adapter", "-lface_detection", "-lunity", "-lc", "-llibsodium", "-lesp_http_client", "-lapp_update", "-lnewlib", "-lcxx", "-ltcp_transport", "-lm", "-lefuse", "-lopenssl", "-lwifi_provisioning", "-lespcoredump", "-llog", "-lmbedtls", "-lesp_ringbuf", "-lwps", "-lhusarnet", "-lnet80211", "-lmqtt", "-lesp_https_server", "-lapp_trace", "-lesp_event", "-lesp32-camera", "-lsoc", "-lheap", "-llwip", "-lwpa", "-lrtc", "-lxtensa-debug-module", "-lspi_flash", "-lphy", "-lfr", "-lconsole", "-lcoap", "-lbtdm_app", "-lsdmmc", "-lfd", "-lmicro-ecc", "-ljson", "-lcore", "-lprotobuf-c", "-lethernet", "-lspiffs", "-lnvs_flash", "-lwpa_supplicant", "-lvfs", "-lasio", "-lwpa2", "-lpp", "-lbootloader_support", "-limage_util", "-ldl_lib", "-lulp", "-lnghttp", "-lpthread", "-lfreemodbus", "-lexpat", "-lfatfs", "-lsmartconfig_ack", "-lmdns", "-lcoexist", "-lesp-tls", "-lesp_https_ota", "-lbt", "-lstdc++"
     ],
 
     LIBSOURCE_DIRS=[
@@ -179,6 +184,9 @@ env.Append(
         ("0xe000", join(FRAMEWORK_DIR, "tools", "partitions", "boot_app0.bin"))
     ]
 )
+
+if not env.BoardConfig().get("build.ldscript", ""):
+    env.Replace(LDSCRIPT_PATH=env.BoardConfig().get("build.arduino.ldscript", ""))
 
 #
 # Target: Build Core Library
