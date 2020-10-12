@@ -13,3 +13,6 @@ tools/mkspiffs/mkspiffs.exe
 __vm/
 *.vcxproj*
 .vscode/
+
+# Husarnet specific ignores
+arduino-husarnet-esp32-v1.zip
