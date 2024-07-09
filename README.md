@@ -1,3 +1,10 @@
+> [!CAUTION]
+> Husarnet for ESP32 has undergone a major refactor making it compatible with the latest upstream core codebase, latest ESP-IDF releases and newest Espressif microcontrollers. Because of that, code in **this repository is outdated** and it should not be used for new designs. It may or may not be updated to reflect the changes later in the future.
+> 
+> [Learn more about our latest changes here!](https://husarnet.com/docs/esp32-idf/)
+
+---
+
 # Arduino core for the ESP32
 [![Build Status](https://travis-ci.org/espressif/arduino-esp32.svg?branch=master)](https://travis-ci.org/espressif/arduino-esp32) ![](https://github.com/espressif/arduino-esp32/workflows/ESP32%20Arduino%20CI/badge.svg)
 
